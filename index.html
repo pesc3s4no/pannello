@@ -183,7 +183,7 @@ function setSrc(kind,ts,extra){const s=$('src');s.className='src'+(kind==='live'
   $('srcs').textContent=ago(ts)+(FORCE_FB?' · fallback forzato':'')+' · copia cifrata GitHub';}
  else {$('srct').textContent=extra||'Nessun dato';$('srcs').textContent='';}}
 async function tryLive(){lastLiveTry=Date.now();
- const D=await getJSON(LIVE_URL+'?k='+encodeURIComponent(K),{cache:'no-store',headers:{'ngrok-skip-browser-warning':'1'}},8000);
+ const D=await getJSON(LIVE_URL+'?k='+encodeURIComponent(K),{cache:'default',headers:{'ngrok-skip-browser-warning':'1'}},8000);
  if(!D||typeof D!=='object'||!('mode' in D))throw new Error('risposta non valida');
  render(D);mode='live';lastTs=D.server_time||Date.now()/1000;haveData=true;setSrc('live',lastTs);}
 async function tryFallback(){lastFbTry=Date.now();let E=null,err;
