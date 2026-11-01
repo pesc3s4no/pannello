@@ -366,7 +366,7 @@ function avatar(sym,mint){const h=hue(mint||sym),h2=(h+50)%360;const t=String(sy
 function setH(el,html){if(typeof el==='string')el=$(el);if(el&&el._h!==html){el.innerHTML=html;el._h=html}}
 const IT_REASON=[[/no \$30k cross within 10 min/i,'nessun incrocio $30k entro 10 min'],[/AMM within 3 s/i,'curva comprata al lancio (AMM ≤3 s)'],
  [/top1>1\.91% and growth60<=89%/i,'top-1 >1,91% e crescita 60 s ≤89%'],[/top1>1\.91%/i,'top-1 holder >1,91%'],[/growth60<=89%/i,'crescita buyer 60 s ≤89%'],
- [/non-SOL quote/i,'quote non SOL'],[/first trade on AMM/i,'primo trade già su AMM'],[/^no trades$/i,'nessun trade'],[/skipped: not enough virtual cash/i,'saltata: cassa virtuale insufficiente'],
+ [/Mayhem mode/i,'moneta in Mayhem mode'],[/\bmayhem\b/,'Mayhem'],[/holders<20/i,'holder < 20'],[/non-SOL quote/i,'quote non SOL'],[/first trade on AMM/i,'primo trade già su AMM'],[/^no trades$/i,'nessun trade'],[/skipped: not enough virtual cash/i,'saltata: cassa virtuale insufficiente'],
  [/TP \+30% \(100%\)/i,'take profit +30%'],[/stop loss -30%/i,'stop loss −30%'],[/time stop \(coin inactive, last price\)/i,'time stop (moneta inattiva)'],[/^time stop/i,'time stop'],[/exit without position/i,'uscita senza posizione'],[/pnl /i,'P/L ']];
 const itr=s=>{s=String(s??'');for(const [r,t] of IT_REASON)s=s.replace(r,t);return s};
 const KLAB={TP:'TP',SL:'SL',TIME:'TEMPO',ALTRO:'ALTRO'};
