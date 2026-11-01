@@ -537,8 +537,8 @@ function renderFeed(){const A=D.analyzing||[];$('radn').textContent=A.length;
 
 function renderFunnel(){const st=D.funnel_stages||[];if(!st.length){setH('fn','<div class="empty">—</div>');return}
   const top=Math.max(1,st[0].n);const cols=['#60a5fa','#22d3ee','#2dd4bf','#a78bfa','#c084fc','#34d399'];
-  setH('fn',st.map((s,i)=>{const prev=i?st[i-1].n:null;const conv=i&&prev?(s.n/prev*100):null;const w=s.n?Math.max(2.5,Math.sqrt(s.n/top)*100):0;
-    return `<div class="fnr"><span class="lb">${esc(s.label)}</span><span class="n">${s.n.toLocaleString('it-IT')}${conv!=null?`<small>${fmt(conv,conv<10?1:0)}%</small>`:''}</span><div class="fnb"><i style="width:${w}%;background:linear-gradient(90deg,${cols[i%6]}88,${cols[i%6]});color:${cols[i%6]}"></i></div></div>`}).join(''));
+  setH('fn',st.map((s,i)=>{const prev=i?st[i-1].n:null;const conv=i?(prev?Math.min(100,s.n/prev*100):0):null;const w=s.n?Math.max(2.5,Math.sqrt(s.n/top)*100):0;
+    return `<div class="fnr"><span class="lb">${esc(s.label)}</span><span class="n">${s.n.toLocaleString('it-IT')}${conv!=null?`<small title="% della fase precedente"> · ${fmt(conv,conv<10&&conv>0?1:0)}%</small>`:''}</span><div class="fnb"><i style="width:${w}%;background:linear-gradient(90deg,${cols[i%6]}88,${cols[i%6]});color:${cols[i%6]}"></i></div></div>`}).join(''));
   $('fnsrc').textContent=D.funnel_source||''}
 
 let TF='all',TQ='',TN=15;
