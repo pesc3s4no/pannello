@@ -230,7 +230,7 @@ footer b{color:var(--tx2)}
 
 <header class="top"><div class="topin">
   <div class="logo"><svg width="20" height="20" viewBox="0 0 64 64"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><path d="M8 44 L24 28 L34 38 L56 14" stroke="url(#lg1)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="brand"><b>Paper Terminal</b><small id="stratname">pump.fun · TOP1-TP30</small></div>
+  <div class="brand"><b>Paper Terminal</b><small id="stratname">pump.fun · F3</small></div>
   <span class="pill status" id="status"><span class="dot"></span><span id="stxt">connessione…</span></span>
 </div></header>
 
@@ -279,7 +279,7 @@ footer b{color:var(--tx2)}
       </section>
 
       <section class="card pad" id="posizioni">
-        <div class="h"><h2>Posizioni aperte <i id="posn">0</i></h2><span class="sub" id="posx">TP +30% · SL −30% · stop lancio+20′</span></div>
+        <div class="h"><h2>Posizioni aperte <i id="posn">0</i></h2><span class="sub" id="posx">TP +50% · SL −30% · time stop 10′</span></div>
         <div id="poslist"></div>
       </section>
 
@@ -364,7 +364,7 @@ function hue(s){let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))>>>0;re
 function avatar(sym,mint){const h=hue(mint||sym),h2=(h+50)%360;const t=String(sym||'?').replace(/[^A-Za-z0-9]/g,'').slice(0,2).toUpperCase()||'?';
   return `<div class="av" style="background:linear-gradient(135deg,hsl(${h} 80% 55%),hsl(${h2} 75% 40%))">${esc(t)}</div>`}
 function setH(el,html){if(typeof el==='string')el=$(el);if(el&&el._h!==html){el.innerHTML=html;el._h=html}}
-const IT_REASON=[[/no \$30k cross within 10 min/i,'nessun incrocio $30k entro 10 min'],[/AMM within 3 s/i,'curva comprata al lancio (AMM ≤3 s)'],
+const IT_REASON=[[/first trade not on bonding curve/i,'primo trade non sulla curva'],[/tape starts >60 s after launch already >=30k/i,'tape iniziato tardi già sopra $30k'],[/^timeout$/i,'timeout'],[/no \$30k cross within 10 min/i,'nessun incrocio $30k entro 10 min'],[/AMM within 3 s/i,'curva comprata al lancio (AMM ≤3 s)'],
  [/top1>1\.91% and growth60<=89%/i,'top-1 >1,91% e crescita 60 s ≤89%'],[/top1>1\.91%/i,'top-1 holder >1,91%'],[/growth60<=89%/i,'crescita buyer 60 s ≤89%'],
  [/Mayhem mode/i,'moneta in Mayhem mode'],[/\bmayhem\b/,'Mayhem'],[/holders<20/i,'holder < 20'],[/non-SOL quote/i,'quote non SOL'],[/first trade on AMM/i,'primo trade già su AMM'],[/^no trades$/i,'nessun trade'],[/skipped: not enough virtual cash/i,'saltata: cassa virtuale insufficiente'],
  [/TP \+30% \(100%\)/i,'take profit +30%'],[/stop loss -30%/i,'stop loss −30%'],[/time stop \(coin inactive, last price\)/i,'time stop (moneta inattiva)'],[/^time stop/i,'time stop'],[/exit without position/i,'uscita senza posizione'],[/pnl /i,'P/L ']];
@@ -503,7 +503,7 @@ function renderPos(){const L=D.open||[];$('posn').textContent=L.length;const el=
     <div><small>Size</small><span data-f="sz">—</span></div><div><small>Picco</small><span data-f="pk">—</span></div><div><small>Multiplo</small><span data-f="x">—</span></div></div>
     <div class="tbar"><i data-f="tb"></i></div><div class="trow"><span data-f="t0">lancio</span><span data-f="t1">stop</span></div></div>`).join('')}
   for(const o of L){const c=el.querySelector(`[data-m="${CSS.escape(o.mint)}"]`);if(!c)continue;const f=n=>c.querySelector(`[data-f="${n}"]`);
-    const p=+o.pnl_pct||0,tp=+o.tp_pct||30,sl=+o.sl_pct||-30;c.classList.toggle('win',p>0);c.classList.toggle('lose',p<0);
+    const p=+o.pnl_pct||0,tp=+o.tp_pct||50,sl=+o.sl_pct||-30;c.classList.toggle('win',p>0);c.classList.toggle('lose',p<0);
     const pe=f('pct');pe.className='pnlbig '+cls(p);pe.textContent=fP(p);f('sol').textContent=fSs(o.pnl_sol,5)+' SOL';
     const pos=posPct(p,sl,tp),mid=posPct(0,sl,tp);const fl=f('fill');fl.style.left=Math.min(pos,mid)+'%';fl.style.width=Math.abs(pos-mid)+'%';
     fl.style.background=p>=0?'linear-gradient(90deg,rgba(52,211,153,.4),#34d399)':'linear-gradient(90deg,#fb7185,rgba(251,113,133,.4))';fl.style.boxShadow=p>=0?'0 0 14px #34d399':'0 0 14px #fb7185';
@@ -521,8 +521,8 @@ function tick(){const el=$('poslist');if(!el)return;for(const c of el.querySelec
   f('t0').textContent=(o.launch_t?'lancio ':'entrata ')+tHM(st);f('t1').textContent='stop '+tHMS(end)+(o.deadline_approx?' (stima)':'')}}
 setInterval(()=>{tick();renderStatus()},1000);
 
-const STD=[['social',/social/i,'Socials'],['30k',/30k|mc /i,'MC $30k'],['top',/top/i,'Top-1 ≤1,91%'],['growth',/cresc|growth|buyer/i,'Crescita 60 s']];
-function vclass(v){v=String(v||'').toUpperCase();if(/ENTRA|OK|BUY|PASS/.test(v))return'g';if(/CHIUSA/.test(v))return'b';if(/SCADUTA|SALTATA/.test(v))return'x';if(/SCART|REJ|FAIL|NO/.test(v))return'r';return'y'}
+const STD=[['social',/social/i,'Socials'],['30k',/30k|mc /i,'MC $30k'],['mayhem',/mayhem/i,'No Mayhem'],['holder',/holder/i,'Holder ≥ 20'],['score',/punteggio|score/i,'Punteggio modello']];
+function vclass(v){v=String(v||'').toUpperCase();if(/ENTRA|OK|BUY|PASS/.test(v))return'g';if(/CHIUSA/.test(v))return'b';if(/SCADUTA|SALTATA|OMBRA/.test(v))return'x';if(/SCART|REJ|FAIL|NO/.test(v))return'r';return'y'}
 function renderFeed(){const A=D.analyzing||[];$('radn').textContent=A.length;
   if(!A.length){setH('feed',`<div class="empty"><div class="radar"></div>Nessuna moneta in analisi in questo momento</div>`);return}
   setH('feed',A.map(a=>{const vc=vclass(a.verdict);const fl=(a.filters||[]).slice();
